@@ -1,7 +1,10 @@
+'use client'
+
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { PlayCircle } from "lucide-react"
+import { PlayCircle, X } from "lucide-react"
+import { useState } from "react"
 
 // Mock data for event highlights
 const highlights = [
@@ -41,6 +44,8 @@ const highlights = [
 ]
 
 export function EventHighlights() {
+  const [playingId, setPlayingId] = useState<string | null>(null)
+
   return (
     <section className="container">
       <div className="flex flex-col gap-8">
@@ -81,26 +86,45 @@ export function EventHighlights() {
                   </div>
 
                   <div className="mt-4">
-                    <Button className="gap-2">
+                    <Button className="gap-2" onClick={() => setPlayingId(highlight.id)}>
                       <PlayCircle className="h-4 w-4" />
                       Watch Highlights
                     </Button>
                   </div>
                 </div>
 
-                <div className="overflow-hidden rounded-lg border">
+                <div className="overflow-hidden rounded-lg border relative">
                   <AspectRatio ratio={16 / 9}>
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/10">
-                      <Button size="lg" variant="outline" className="gap-2 bg-background/80 backdrop-blur">
-                        <PlayCircle className="h-5 w-5" />
-                        Play Video
-                      </Button>
-                    </div>
-                    <img
-                      src={highlight.image || "/placeholder.svg"}
-                      alt={highlight.title}
-                      className="h-full w-full object-cover"
-                    />
+                    {playingId === highlight.id ? (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black">
+                        <video
+                          src="/videos/event.mp4"
+                          controls
+                          autoPlay
+                          className="h-full w-full object-cover"
+                        />
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute top-2 right-2 z-10 bg-black/60 text-white hover:bg-black/80"
+                          onClick={() => setPlayingId(null)}
+                        >
+                          <X className="h-5 w-5" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                        <Button size="lg" variant="outline" className="gap-2 bg-background/80 backdrop-blur" onClick={() => setPlayingId(highlight.id)}>
+                          <PlayCircle className="h-5 w-5" />
+                          Play Video
+                        </Button>
+                        <img
+                          src={highlight.image || "/placeholder.svg"}
+                          alt={highlight.title}
+                          className="h-full w-full object-cover absolute inset-0 -z-10"
+                        />
+                      </div>
+                    )}
                   </AspectRatio>
                 </div>
               </div>
