@@ -37,6 +37,18 @@ export default function EventPage({ params }: { params: { id: string } }) {
     isLive: true,
   }
 
+  // Map event titles to video file names
+  const eventTitleToVideo: Record<string, string> = {
+    "Tech Conference 2024": "/videos/Tech Conference 2024.mp4",
+    "Cybersecurity Conference": "/videos/Cybersecurity Conference.mp4",
+    "Future of Work Summit": "/videos/Future of Work Summit.mp4",
+    "DevOps Transformation Conference": "/videos/DevOps Transformation Conference.mp4",
+    "Marketing Innovation Summit": "/videos/Marketing Innovation Summit.mp4",
+    "Product Management Conference": "/videos/Product Management Conference.mp4",
+    "AI & Machine Learning Workshop": "/videos/AI and machine learning workshop.mp4",
+  }
+  const videoSrc = eventTitleToVideo[event.title] || "/videos/Tech Conference 2024.mp4"
+
   return (
     <div className="container py-8">
       <div className="flex flex-col gap-8">
@@ -84,7 +96,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <Card className="overflow-hidden">
-              <LiveStreamPlayer />
+              <LiveStreamPlayer videoSrc={videoSrc} />
 
               <CardContent className="p-4">
                 <Tabs defaultValue="chat">

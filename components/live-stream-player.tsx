@@ -2,16 +2,53 @@
 
 import { Button } from "@/components/ui/button"
 import { Maximize, Minimize, Pause, Play, Volume2, VolumeX } from "lucide-react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 
-export function LiveStreamPlayer() {
+export function LiveStreamPlayer({ videoSrc }: { videoSrc: string }) {
   const [isPlaying, setIsPlaying] = useState(true)
   const [isMuted, setIsMuted] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  const handlePlayPause = () => {
+    if (!videoRef.current) return
+    if (isPlaying) {
+      videoRef.current.pause()
+    } else {
+      videoRef.current.play()
+    }
+    setIsPlaying(!isPlaying)
+  }
+
+  const handleMute = () => {
+    if (!videoRef.current) return
+    videoRef.current.muted = !isMuted
+    setIsMuted(!isMuted)
+  }
+
+  const handleFullscreen = () => {
+    if (!videoRef.current) return
+    if (!isFullscreen) {
+      videoRef.current.requestFullscreen()
+    } else {
+      document.exitFullscreen()
+    }
+    setIsFullscreen(!isFullscreen)
+  }
 
   return (
     <div className="relative aspect-video w-full bg-black">
-      <img src="/placeholder.svg?height=720&width=1280" alt="Live Stream" className="h-full w-full object-cover" />
+      <video
+        ref={videoRef}
+        src={videoSrc}
+        className="h-full w-full object-cover"
+        autoPlay
+        loop
+        muted={isMuted}
+        playsInline
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+      />
 
       {/* Live indicator */}
       <div className="absolute left-4 top-4 flex items-center gap-2 rounded-md bg-black/70 px-2 py-1">
@@ -33,7 +70,7 @@ export function LiveStreamPlayer() {
           variant="outline"
           size="icon"
           className="z-10 h-16 w-16 rounded-full bg-black/50 text-white hover:bg-black/70"
-          onClick={() => setIsPlaying(!isPlaying)}
+          onClick={handlePlayPause}
         >
           {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
         </Button>
@@ -45,7 +82,7 @@ export function LiveStreamPlayer() {
               variant="ghost"
               size="icon"
               className="h-8 w-8 text-white hover:bg-white/20"
-              onClick={() => setIsPlaying(!isPlaying)}
+              onClick={handlePlayPause}
             >
               {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
             </Button>
@@ -54,7 +91,7 @@ export function LiveStreamPlayer() {
               variant="ghost"
               size="icon"
               className="h-8 w-8 text-white hover:bg-white/20"
-              onClick={() => setIsMuted(!isMuted)}
+              onClick={handleMute}
             >
               {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
             </Button>
@@ -66,7 +103,7 @@ export function LiveStreamPlayer() {
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-white hover:bg-white/20"
-            onClick={() => setIsFullscreen(!isFullscreen)}
+            onClick={handleFullscreen}
           >
             {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
           </Button>
