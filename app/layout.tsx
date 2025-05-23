@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Lunza — Seamless Virtual Streaming & Engagement",
   description: "Lunza is your all-in-one solution for powerful video streaming, audience engagement, and smart event management — built for modern digital experiences.",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/images/favicon.jpg",
   },
 }
 
