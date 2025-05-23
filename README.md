@@ -1,4 +1,4 @@
-# Conference Streaming Platform
+# LUNZA
 
 A modern, full-featured live streaming platform designed specifically for conferences and virtual events. Built with Next.js, TypeScript, and Tailwind CSS.
 
