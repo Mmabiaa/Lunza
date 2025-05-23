@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { VideoBackground } from "@/app/components/video-background"
 
 export const metadata: Metadata = {
-  title: "Pricing | Conference Streaming Platform",
+  title: "Pricing | Lunza",
   description: "Choose the perfect plan for your virtual conference needs",
 }
 

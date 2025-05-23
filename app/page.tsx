@@ -7,6 +7,7 @@ import { Testimonials } from "@/components/testimonials"
 import { Partners } from "@/components/partners"
 import { EventHighlights } from "@/components/event-highlights"
 import { Features } from "@/components/features"
+import { VideoBackground } from "@/app/components/video-background"
 
 export default function Home() {
   return (
@@ -44,26 +45,30 @@ export default function Home() {
       <Partners />
       <EventHighlights />
 
-      <section className="bg-primary py-16 text-primary-foreground">
-        <div className="container flex flex-col items-center gap-6 text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Ready to host your next event?</h2>
-          <p className="max-w-[700px] text-lg text-primary-foreground/80">
-            Join thousands of event organizers who trust StreamConf for their virtual conferences.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg" variant="secondary">
-              <Link href="/register">Get Started</Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
-            >
-              <Link href="/contact">Contact Sales</Link>
-            </Button>
+      <section className="relative overflow-hidden bg-primary text-primary-foreground">
+        <VideoBackground videoSrc="/videos/host.mp4" className="absolute inset-0 h-full w-full">
+          <div className="relative z-10 py-16">
+            <div className="container flex flex-col items-center gap-6 text-center">
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Ready to host your next event?</h2>
+              <p className="max-w-[700px] text-lg text-primary-foreground/80">
+                Join thousands of event organizers who trust StreamConf for their virtual conferences.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Button asChild size="lg" variant="secondary">
+                  <Link href="/register">Get Started</Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                >
+                  <Link href="/contact">Contact Sales</Link>
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
+        </VideoBackground>
       </section>
     </div>
   )

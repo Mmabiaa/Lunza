@@ -60,7 +60,7 @@ export default function TermsPage() {
   return (
     <div className="flex flex-col gap-16 pb-16">
       {/* Hero Section */}
-      <VideoBackground videoSrc="/videos/event-bg-video.mp4" className="py-20">
+      <VideoBackground videoSrc="/videos/contact.mp4" className="py-20">
         <div className="container">
           <div className="mx-auto flex max-w-[800px] flex-col items-center text-center">
             <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl">
@@ -92,22 +92,26 @@ export default function TermsPage() {
       </section>
 
       {/* Contact Section */}
-      <section className="bg-muted py-20">
-        <div className="container">
-          <div className="mx-auto flex max-w-[800px] flex-col items-center text-center">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Questions About Our Terms?
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Our team is here to help you understand our terms of service
-            </p>
-            <div className="mt-8">
-              <Button asChild size="lg">
-                <Link href="/contact">Contact Us</Link>
-              </Button>
+      <section className="relative overflow-hidden bg-muted">
+        <VideoBackground videoSrc="/videos/host.mp4" className="absolute inset-0 h-full w-full">
+          <div className="relative z-10 py-20">
+            <div className="container">
+              <div className="mx-auto flex max-w-[800px] flex-col items-center text-center">
+                <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                  Questions About Our Terms?
+                </h2>
+                <p className="mt-4 text-lg text-muted-foreground">
+                  Our team is here to help you understand our terms of service
+                </p>
+                <div className="mt-8">
+                  <Button asChild size="lg">
+                    <Link href="/contact">Contact Us</Link>
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </VideoBackground>
       </section>
     </div>
   )

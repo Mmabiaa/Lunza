@@ -15,7 +15,7 @@ import {
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Features | Conference Streaming Platform",
+  title: "Features | Lunza",
   description: "Discover the powerful features of our conference streaming platform",
 }
 
@@ -164,7 +164,7 @@ export default function FeaturesPage() {
           "Live Streaming": "/videos/streaming-bg-video.mp4",
           "Event Management": "/videos/management-bg-video.mp4",
           "Audience Engagement": "/videos/audience-bg-video.mp4",
-          "Networking": "/videos/event-bg-video.mp4",
+          "Networking": "/videos/networking.mp4",
         }
 
         const videoSrc = videoMap[category.title]
@@ -208,35 +208,37 @@ export default function FeaturesPage() {
         )
       })}
 
-      {/* Additional Features */}
-      <section className="container">
-        <div className="mx-auto max-w-[800px] text-center">
-          <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            Additional Features
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            More tools and capabilities to enhance your virtual events
-          </p>
-        </div>
+      {/* Additional Features Section */}
+      <VideoBackground videoSrc="/videos/additional-features.mp4" className="py-20">
+        <section className="container">
+          <div className="mx-auto max-w-[800px] text-center">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              Additional Features
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Enhance your virtual events with these powerful additional features
+            </p>
+          </div>
 
-        <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {additionalFeatures.map((feature) => (
-            <Card key={feature.title}>
-              <CardHeader>
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <feature.icon className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="text-xl text-foreground">{feature.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-muted-foreground">
-                  {feature.description}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+          <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {additionalFeatures.map((feature) => (
+              <Card key={feature.title}>
+                <CardHeader>
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                    <feature.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle className="text-xl text-foreground">{feature.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-muted-foreground">
+                    {feature.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      </VideoBackground>
     </div>
   )
 }

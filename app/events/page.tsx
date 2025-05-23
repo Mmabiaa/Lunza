@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CalendarIcon, Clock, Filter, MapPin, Search, Users } from "lucide-react"
 import Link from "next/link"
 import { VideoBackground } from "@/app/components/video-background"
+import { Metadata } from "next"
 
 // Mock data for events
 const upcomingEvents = [
@@ -283,4 +284,9 @@ export default function EventsPage() {
       </div>
     </div>
   )
+}
+
+export const metadata: Metadata = {
+  title: "Events | Lunza",
+  description: "Join our upcoming conferences and virtual events",
 }

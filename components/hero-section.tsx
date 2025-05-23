@@ -62,7 +62,7 @@ export function HeroSection() {
               </Button>
             </div>
             <video
-              src="/videos/live.mp4"
+              src="/videos/demo.mp4"
               autoPlay
               loop
               muted

@@ -10,7 +10,7 @@ import { CalendarIcon, Clock, Filter, Search, Tag } from "lucide-react"
 import { VideoBackground } from "@/app/components/video-background"
 
 export const metadata: Metadata = {
-  title: "Blog | Conference Streaming Platform",
+  title: "Blog | Lunza",
   description: "Latest news, updates, and insights about conference streaming technology",
 }
 

@@ -7,13 +7,17 @@ import { Toaster } from "@/components/ui/toaster"
 import { MainNav } from "@/components/main-nav"
 import { UserNav } from "@/components/user-nav"
 import Link from "next/link"
+import { Navbar } from "@/components/navbar"
+import { Footer } from "@/components/footer"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "StreamConf - Live Streaming Platform for Conferences",
-  description: "A modern live streaming platform for conferences and online events",
-    generator: 'v0.dev'
+  title: "Lunza — Seamless Virtual Streaming & Engagement",
+  description: "Lunza is your all-in-one solution for powerful video streaming, audience engagement, and smart event management — built for modern digital experiences.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 }
 
 export default function RootLayout({
@@ -33,24 +37,7 @@ export default function RootLayout({
               </div>
             </header>
             <main className="flex-1">{children}</main>
-            <footer className="border-t py-6 md:py-0">
-              <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-                <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-                  &copy; {new Date().getFullYear()} StreamConf. All rights reserved.
-                </p>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <Link href="/terms" className="hover:underline">
-                    Terms
-                  </Link>
-                  <Link href="/privacy" className="hover:underline">
-                    Privacy
-                  </Link>
-                  <Link href="/contact" className="hover:underline">
-                    Contact
-                  </Link>
-                </div>
-              </div>
-            </footer>
+            <Footer />
           </div>
           <Toaster />
         </ThemeProvider>

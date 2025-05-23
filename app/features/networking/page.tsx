@@ -38,7 +38,7 @@ const features = [
 export default function NetworkingPage() {
   return (
     <div className="flex flex-col gap-16 pb-16">
-      <VideoBackground videoSrc="/videos/networkin.mp4" className="py-20">
+      <VideoBackground videoSrc="/videos/networking.mp4" className="py-20">
         <div className="container">
           <div className="mx-auto flex max-w-[800px] flex-col items-center text-center">
             <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl">
