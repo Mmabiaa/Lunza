@@ -23,7 +23,7 @@ export function MainNav() {
   return (
     <div className="flex items-center gap-6">
       <Link href="/" className="flex items-center gap-2">
-        <span className="text-xl font-bold">StreamConf</span>
+        <span className="text-xl font-bold">Lunza</span>
       </Link>
 
       <div className="hidden md:flex">
