@@ -2,7 +2,7 @@
 
 A modern, full-featured live streaming platform designed specifically for conferences and virtual events. Built with Next.js, TypeScript, and Tailwind CSS.
 
-![Conference Streaming Platform](public/placeholder.svg)
+![Conference Streaming Platform](public/images/demo.png)
 
 ## Features
 
@@ -24,6 +24,7 @@ A modern, full-featured live streaming platform designed specifically for confer
 - **Validation**: Zod
 
 ## Getting Started
+[view live demo](https://lunza.vercel.app)
 
 ### Prerequisites
 
