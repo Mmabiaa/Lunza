@@ -4,10 +4,37 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 interface AuthContextType {
-  user: any | null
+  user: {
+    id: string
+    name: string
+    email: string
+    userType: 'attendee' | 'organizer'
+    totalEvents?: number
+    eventsChange?: number
+    totalAttendees?: number
+    attendeesChange?: number
+    watchTime?: number
+    watchTimeChange?: number
+    revenue?: number
+    revenueChange?: number
+    upcomingEvents?: Array<{
+      id: string
+      title: string
+      date: string
+    }>
+    events?: Array<{
+      id: string
+      title: string
+      date: string
+      thumbnail?: string
+      attendees?: number
+    }>
+    createdAt?: string
+    eventsAttended?: number
+  } | null
   loading: boolean
   login: (email: string, password: string) => Promise<void>
-  register: (email: string, password: string, name: string) => Promise<void>
+  register: (email: string, password: string, name: string, userType: 'attendee' | 'organizer') => Promise<void>
   logout: () => void
 }
 
@@ -61,22 +88,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const register = async (email: string, password: string, name: string) => {
+  const register = async (email: string, password: string, name: string, userType: 'attendee' | 'organizer') => {
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password, name })
+        body: JSON.stringify({ email, password, name, userType })
       })
 
-      if (!response.ok) throw new Error('Registration failed')
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Registration failed')
+      }
 
       const data = await response.json()
       localStorage.setItem('token', data.token)
       setUser(data.user)
-      router.push('/')
+      router.push(userType === 'attendee' ? '/dashboard/attendee' : '/dashboard/organizer')
     } catch (error) {
       console.error('Registration error:', error)
       throw error

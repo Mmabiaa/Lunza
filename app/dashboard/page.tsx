@@ -1,10 +1,27 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CalendarIcon, BarChart3, Users, Clock, TicketIcon } from "lucide-react"
 import Link from "next/link"
+import { useAuth } from "@/app/(auth)/auth-context"
 
 export default function DashboardPage() {
+  const { user, loading } = useAuth()
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <div className="flex items-center justify-center h-screen">Please login to access your dashboard</div>
+  }
+
   return (
     <div className="container py-8">
       <div className="flex flex-col gap-8">
@@ -25,8 +42,8 @@ export default function DashboardPage() {
               <CalendarIcon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">12</div>
-              <p className="text-xs text-muted-foreground">+2 from last month</p>
+              <div className="text-2xl font-bold">{user?.totalEvents || 0}</div>
+              <p className="text-xs text-muted-foreground">+{user?.eventsChange || 0} from last month</p>
             </CardContent>
           </Card>
           <Card>
@@ -35,8 +52,8 @@ export default function DashboardPage() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">2,350</div>
-              <p className="text-xs text-muted-foreground">+15% from last month</p>
+              <div className="text-2xl font-bold">{user?.totalAttendees || 0}</div>
+              <p className="text-xs text-muted-foreground">+{user?.attendeesChange || 0}% from last month</p>
             </CardContent>
           </Card>
           <Card>
@@ -45,8 +62,8 @@ export default function DashboardPage() {
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">1,248 hrs</div>
-              <p className="text-xs text-muted-foreground">+10% from last month</p>
+              <div className="text-2xl font-bold">{user?.watchTime || 0} hrs</div>
+              <p className="text-xs text-muted-foreground">+{user?.watchTimeChange || 0}% from last month</p>
             </CardContent>
           </Card>
           <Card>
@@ -55,8 +72,8 @@ export default function DashboardPage() {
               <TicketIcon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$24,780</div>
-              <p className="text-xs text-muted-foreground">+12% from last month</p>
+              <div className="text-2xl font-bold">${user?.revenue || 0}</div>
+              <p className="text-xs text-muted-foreground">+{user?.revenueChange || 0}% from last month</p>
             </CardContent>
           </Card>
         </div>
@@ -70,33 +87,44 @@ export default function DashboardPage() {
 
           <TabsContent value="upcoming" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <Card key={i}>
-                  <div className="aspect-video w-full overflow-hidden">
-                    <img
-                      src={`/placeholder.svg?height=400&width=600`}
-                      alt={`Event ${i}`}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <CardHeader className="p-4">
-                    <CardTitle className="line-clamp-1 text-xl">Tech Conference 202{i + 3}</CardTitle>
-                    <CardDescription className="flex items-center gap-2">
-                      <CalendarIcon className="h-4 w-4" />
-                      <span>June {10 + i}, 2024</span>
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex justify-between p-4 pt-0">
-                    <div className="flex items-center gap-1 text-sm">
-                      <Users className="h-4 w-4" />
-                      <span>{100 * i}+ registered</span>
+              {user?.events?.length ? (
+                user.events.map((event) => (
+                  <Card key={event.id}>
+                    <div className="aspect-video w-full overflow-hidden">
+                      <img
+                        src={event.thumbnail || '/placeholder.svg'}
+                        alt={event.title}
+                        className="h-full w-full object-cover"
+                      />
                     </div>
-                    <Button asChild size="sm" variant="outline">
-                      <Link href={`/dashboard/events/${i}`}>Manage</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
+                    <CardHeader className="p-4">
+                      <CardTitle className="line-clamp-1 text-xl">{event.title}</CardTitle>
+                      <CardDescription className="flex items-center gap-2">
+                        <CalendarIcon className="h-4 w-4" />
+                        <span>{new Date(event.date).toLocaleDateString()}</span>
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex justify-between p-4 pt-0">
+                      <div className="flex items-center gap-1 text-sm">
+                        <Users className="h-4 w-4" />
+                        <span>{event.attendees || 0} registered</span>
+                      </div>
+                      <Button asChild size="sm" variant="outline">
+                        <Link href={`/dashboard/events/${event.id}`}>Manage</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-8">
+                  <h3 className="text-lg font-semibold mb-2">No events found</h3>
+                  <p className="text-gray-500">Create your first event to get started</p>
+                  <Button asChild className="mt-4">
+                    <Link href="/dashboard/create">Create Event</Link>
+                  </Button>
+                </div>
+              )}
+              ))
             </div>
           </TabsContent>
 
