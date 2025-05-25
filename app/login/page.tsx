@@ -2,104 +2,116 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useRouter } from "next/navigation"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { VideoBackground } from "@/app/components/video-background"
+import { Button } from "@/components/ui/button"
+import { User, Lock } from "lucide-react"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [remember, setRemember] = useState(false)
-  const [error, setError] = useState('')
+  const router = useRouter()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Create a basic user profile
+    setError("")
+
+    // Create demo user data
     const userData = {
-      id: Math.random().toString(36).substr(2, 9),
-      name: email.split('@')[0],
-      email,
-      userType: 'attendee',
-      totalEvents: 0,
-      eventsChange: 0,
-      totalAttendees: 0,
-      attendeesChange: 0,
+      id: "1",
+      name: email.split("@")[0],
+      email: email,
+      userType: "attendee",
+      eventsAttended: 0,
       watchTime: 0,
-      watchTimeChange: 0,
       revenue: 0,
-      revenueChange: 0,
-      upcomingEvents: [],
-      events: [],
       createdAt: new Date().toISOString(),
-      eventsAttended: 0
+      upcomingEvents: []
     }
-    localStorage.setItem('user', JSON.stringify(userData))
-    window.location.href = '/dashboard/attendee'
+
+    // Store user data in localStorage
+    localStorage.setItem("user", JSON.stringify(userData))
+
+    // Redirect to main dashboard
+    router.push("/dashboard")
   }
 
   return (
-    <VideoBackground videoSrc="/videos/join-bg-video.mp4" className="flex h-[calc(100vh-4rem)] items-center justify-center">
-      <Card className="mx-auto w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Login</CardTitle>
-          <CardDescription>Enter your email and password to access your account</CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="relative min-h-screen">
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        className="absolute top-0 left-0 w-full h-full object-cover z-0"
+      >
+        <source src="/blog.mp4" type="video/mp4" />
+      </video>
+
+      {/* Overlay */}
+      <div className="absolute top-0 left-0 w-full h-full bg-black/60 z-10"></div>
+
+      {/* Content */}
+      <div className="relative z-20 flex items-center justify-center min-h-screen p-4">
+        <Card className="w-full max-w-md bg-white/10 backdrop-blur-md border-white/20">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl font-bold text-white text-center">Welcome Back</CardTitle>
+            <CardDescription className="text-white/70 text-center">
+              Enter your credentials to access your account
+            </CardDescription>
+          </CardHeader>
           <CardContent>
-            {error && (
-              <p className="text-red-500 text-sm">{error}</p>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="name@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <Link href="/forgot-password" className="text-sm text-primary underline-offset-4 hover:underline">
-                  Forgot password?
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <div className="relative">
+                  <User className="absolute left-3 top-3 h-5 w-5 text-white/70" />
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-white/50"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-5 w-5 text-white/70" />
+                  <Input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-white/50"
+                    required
+                  />
+                </div>
+              </div>
+              {error && (
+                <div className="text-red-400 text-sm text-center">{error}</div>
+              )}
+              <Button
+                type="submit"
+                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
+              >
+                Sign In
+              </Button>
+              <div className="text-center text-white/70">
+                Don't have an account?{" "}
+                <Link
+                  href="/register"
+                  className="text-white hover:text-white/90 underline"
+                >
+                  Sign up
                 </Link>
               </div>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="remember"
-                checked={remember}
-                onCheckedChange={(checked) => setRemember(checked as boolean)}
-              />
-              <Label htmlFor="remember" className="text-sm font-normal">
-                Remember me
-              </Label>
-            </div>
+            </form>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
-            <div className="text-center text-sm">
-              Don't have an account?{" "}
-              <Link href="/register" className="text-primary underline-offset-4 hover:underline">
-                Register
-              </Link>
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
-    </VideoBackground>
+        </Card>
+      </div>
+    </div>
   )
 }
