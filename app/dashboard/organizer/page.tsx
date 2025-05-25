@@ -1,11 +1,63 @@
 "use client"
 
-import { useAuth } from "../(auth)/auth-context.tsx"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
+interface User {
+  id: string
+  name: string
+  email: string
+  userType: 'attendee' | 'organizer'
+  totalEvents?: number
+  eventsChange?: number
+  totalAttendees?: number
+  attendeesChange?: number
+  watchTime?: number
+  watchTimeChange?: number
+  revenue?: number
+  revenueChange?: number
+  upcomingEvents?: Array<{
+    id: string
+    title: string
+    date: string
+  }>
+  events?: Array<{
+    id: string
+    title: string
+    date: string
+    thumbnail?: string
+    attendees?: number
+  }>
+  createdAt?: string
+  eventsAttended?: number
+}
+
 export default function OrganizerDashboard() {
-  const { user } = useAuth()
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const userData = localStorage.getItem('user')
+    if (userData) {
+      const parsedUser = JSON.parse(userData)
+      if (parsedUser.userType === 'organizer') {
+        setUser(parsedUser)
+      } else {
+        // Redirect if not an organizer
+        window.location.href = '/dashboard/attendee'
+      }
+    }
+    setLoading(false)
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      </div>
+    )
+  }
 
   if (!user) {
     return <div className="flex items-center justify-center h-screen">Please login to access your dashboard</div>
@@ -66,15 +118,15 @@ export default function OrganizerDashboard() {
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-gray-500">Total Events</p>
-                    <h3 className="text-2xl font-bold">0</h3>
+                    <h3 className="text-2xl font-bold">{user.totalEvents || 0}</h3>
                   </div>
                   <div>
                     <p className="text-gray-500">Active Events</p>
-                    <h3 className="text-2xl font-bold text-green-500">0</h3>
+                    <h3 className="text-2xl font-bold text-green-500">{user.events?.length || 0}</h3>
                   </div>
                   <div>
                     <p className="text-gray-500">Upcoming Events</p>
-                    <h3 className="text-2xl font-bold text-blue-500">0</h3>
+                    <h3 className="text-2xl font-bold text-blue-500">{user.upcomingEvents?.length || 0}</h3>
                   </div>
                 </div>
               </div>
@@ -105,8 +157,9 @@ export default function OrganizerDashboard() {
               <div className="flex items-center gap-4">
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold">Organizer Stats</h3>
-                  <p className="text-gray-500">Events Created: 0</p>
-                  <p className="text-gray-500">Total Attendees: 0</p>
+                  <p className="text-gray-500">Events Created: {user.totalEvents || 0}</p>
+                  <p className="text-gray-500">Total Attendees: {user.totalAttendees || 0}</p>
+                  <p className="text-gray-500">Revenue: ${user.revenue?.toLocaleString() || 0}</p>
                 </div>
               </div>
             </div>
