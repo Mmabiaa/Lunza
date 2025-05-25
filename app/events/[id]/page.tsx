@@ -5,49 +5,190 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { CalendarIcon, Clock, MapPin, Share2, TicketIcon, Users } from "lucide-react"
-import { LiveStreamPlayer } from "@/components/live-stream-player"
+import { VideoPlayer } from "@/components/video-player"
 import { EventChat } from "@/components/event-chat"
 import { EventQA } from "@/components/event-qa"
 import { EventSchedule } from "@/components/event-schedule"
 import { EventSpeakers } from "@/components/event-speakers"
 
 export default function EventPage({ params }: { params: { id: string } }) {
-  // This would normally fetch event data based on the ID
-  const eventId = params.id
+  const eventId = params.id;
 
-  // Mock event data
-  const event = {
-    id: eventId,
-    title: "Tech Conference 2024",
-    description:
-      "Join industry leaders for the biggest tech conference of the year. Explore the latest trends, technologies, and innovations shaping the future of the tech industry.",
-    date: "June 15-17, 2024",
-    time: "9:00 AM - 5:00 PM",
-    timezone: "Pacific Time (UTC-8)",
-    location: "Virtual",
-    attendees: 1500,
-    image: "/placeholder.svg?height=720&width=1280",
-    status: "upcoming",
-    featured: true,
-    organizer: {
-      name: "TechEvents Inc.",
-      logo: "/placeholder.svg?height=100&width=100",
+  const events = [
+    {
+      id: 1,
+      title: "Tech Conference 2024",
+      description:
+        "Join industry leaders for the biggest tech conference of the year. Explore the latest trends, technologies, and innovations shaping the future of the tech industry.",
+      date: "June 15-17, 2024",
+      time: "9:00 AM - 5:00 PM",
+      timezone: "Pacific Time (UTC-8)",
+      location: "Virtual",
+      attendees: 1500,
+      image: "/placeholder.svg?height=720&width=1280",
+      status: "upcoming",
+      featured: true,
+      organizer: {
+        name: "TechEvents Inc.",
+        logo: "/placeholder.svg?height=100&width=100",
+      },
+      price: "$29.99",
+      isLive: true,
     },
-    price: "$29.99",
-    isLive: true,
-  }
+    {
+      id: 2,
+      title: "Future of Work Summit",
+      description:
+        "Explore the evolving workplace with insights from global experts. Discover how remote work, automation, and AI are reshaping the future of employment.",
+      date: "July 10-11, 2024",
+      time: "10:00 AM - 4:00 PM",
+      timezone: "Eastern Time (UTC-5)",
+      location: "Virtual",
+      attendees: 1200,
+      image: "/placeholder.svg?height=720&width=1280",
+      status: "upcoming",
+      featured: true,
+      organizer: {
+        name: "WorkWorld Summit",
+        logo: "/placeholder.svg?height=100&width=100",
+      },
+      price: "$24.99",
+      isLive: true,
+    },
+    {
+      id: 3,
+      title: "AI & Machine Learning Workshop",
+      description:
+        "Hands-on sessions with AI experts. Learn how to build and deploy machine learning models using real-world datasets.",
+      date: "August 5, 2024",
+      time: "8:00 AM - 3:00 PM",
+      timezone: "Central Time (UTC-6)",
+      location: "Virtual",
+      attendees: 800,
+      image: "/placeholder.svg?height=720&width=1280",
+      status: "upcoming",
+      featured: false,
+      organizer: {
+        name: "AI Innovators",
+        logo: "/placeholder.svg?height=100&width=100",
+      },
+      price: "$19.99",
+      isLive: true,
+    },
+    {
+      id: 4,
+      title: "Product Management Conference",
+      description:
+        "The go-to event for aspiring and experienced product managers. Learn best practices, tools, and techniques from top PMs across the globe.",
+      date: "September 2-3, 2024",
+      time: "9:00 AM - 6:00 PM",
+      timezone: "Pacific Time (UTC-8)",
+      location: "Virtual",
+      attendees: 1000,
+      image: "/placeholder.svg?height=720&width=1280",
+      status: "upcoming",
+      featured: true,
+      organizer: {
+        name: "Product Leaders Network",
+        logo: "/placeholder.svg?height=100&width=100",
+      },
+      price: "$39.99",
+      isLive: true,
+    },
+    {
+      id: 5,
+      title: "Marketing Innovation Summit",
+      description:
+        "Discover the newest trends in digital marketing, data analytics, and consumer engagement from leading marketers.",
+      date: "October 7, 2024",
+      time: "11:00 AM - 5:00 PM",
+      timezone: "Mountain Time (UTC-7)",
+      location: "Virtual",
+      attendees: 900,
+      image: "/placeholder.svg?height=720&width=1280",
+      status: "upcoming",
+      featured: false,
+      organizer: {
+        name: "MarketWise Agency",
+        logo: "/placeholder.svg?height=100&width=100",
+      },
+      price: "$27.99",
+      isLive: true,
+    },
+    {
+      id: 6,
+      title: "DevOps Transformation Conference",
+      description:
+        "Bridge the gap between development and operations. Learn CI/CD, infrastructure as code, and scalable DevOps practices.",
+      date: "November 15-16, 2024",
+      time: "9:30 AM - 4:30 PM",
+      timezone: "Pacific Time (UTC-8)",
+      location: "Virtual",
+      attendees: 1100,
+      image: "/placeholder.svg?height=720&width=1280",
+      status: "upcoming",
+      featured: true,
+      organizer: {
+        name: "DevOps World",
+        logo: "/placeholder.svg?height=100&width=100",
+      },
+      price: "$34.99",
+      isLive: true,
+    },
+    {
+      id: 7,
+      title: "Future of Work Summit",
+      description:
+        "A repeat session of our popular summit exploring how hybrid work, leadership, and global trends are reshaping modern workplaces.",
+      date: "December 3, 2024",
+      time: "10:00 AM - 4:00 PM",
+      timezone: "Eastern Time (UTC-5)",
+      location: "Virtual",
+      attendees: 1300,
+      image: "/placeholder.svg?height=720&width=1280",
+      status: "upcoming",
+      featured: false,
+      organizer: {
+        name: "WorkWorld Summit",
+        logo: "/placeholder.svg?height=100&width=100",
+      },
+      price: "$24.99",
+      isLive: true,
+    },
+    {
+      id: 8,
+      title: "Cybersecurity Conference",
+      description:
+        "Stay ahead of the latest cyber threats and defenses. Hear from experts on security, compliance, and protecting digital infrastructure.",
+      date: "January 20, 2025",
+      time: "9:00 AM - 5:00 PM",
+      timezone: "Pacific Time (UTC-8)",
+      location: "Virtual",
+      attendees: 1400,
+      image: "/placeholder.svg?height=720&width=1280",
+      status: "upcoming",
+      featured: true,
+      organizer: {
+        name: "SecureNet Alliance",
+        logo: "/placeholder.svg?height=100&width=100",
+      },
+      price: "$29.99",
+      isLive: true,
+    },
+  ];
 
-  // Map event titles to video file names
-  const eventTitleToVideo: Record<string, string> = {
-    "Tech Conference 2024": "/videos/Tech Conference 2024.mp4",
-    "Cybersecurity Conference": "/videos/Cybersecurity Conference.mp4",
-    "Future of Work Summit": "/videos/Future of Work Summit.mp4",
-    "DevOps Transformation Conference": "/videos/DevOps Transformation Conference.mp4",
-    "Marketing Innovation Summit": "/videos/Marketing Innovation Summit.mp4",
-    "Product Management Conference": "/videos/Product Management Conference.mp4",
-    "AI & Machine Learning Workshop": "/videos/AI and machine learning workshop.mp4",
-  }
-  const videoSrc = eventTitleToVideo[event.title] || "/videos/Tech Conference 2024.mp4"
+  const event = events.find((e) => e.id === Number(eventId))!;
+  const eventIdToVideo: Record<string, string> = {
+    "1": "/videos/Tech Conference 2024.mp4",
+    "2": "/videos/Future of Work Summit.mp4",
+    "3": "/videos/AI & Machine Learning Workshop.mp4",
+    "4": "/videos/Product Management Conference.mp4",
+    "5": "/videos/Marketing Innovation Summit.mp4",
+    "6": "/videos/DevOps Transformation Conference.mp4",
+    "7": "/videos/Future of Work Summit.mp4",
+    "8": "/videos/Cybersecurity Conference.mp4",
+  };
+  const videoSrc = eventIdToVideo[eventId] || "/videos/Tech Conference 2024.mp4";
 
   return (
     <div className="container py-8">
@@ -96,7 +237,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <Card className="overflow-hidden">
-              <LiveStreamPlayer videoSrc={videoSrc} />
+              <VideoPlayer src={videoSrc} className="rounded-lg" />
 
               <CardContent className="p-4">
                 <Tabs defaultValue="chat">
@@ -162,7 +303,6 @@ export default function EventPage({ params }: { params: { id: string } }) {
             </Card>
 
             <EventSchedule />
-
             <EventSpeakers />
           </div>
         </div>
