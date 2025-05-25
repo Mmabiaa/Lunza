@@ -1,11 +1,49 @@
 "use client"
 
-import { useAuth } from "../(auth)/auth-context.tsx"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
+interface User {
+  id: string
+  name: string
+  email: string
+  userType: 'attendee' | 'organizer'
+  totalEvents?: number
+  eventsChange?: number
+  totalAttendees?: number
+  attendeesChange?: number
+  watchTime?: number
+  watchTimeChange?: number
+  revenue?: number
+  revenueChange?: number
+  upcomingEvents?: Array<{
+    id: string
+    title: string
+    date: string
+  }>
+  events?: Array<{
+    id: string
+    title: string
+    date: string
+    thumbnail?: string
+    attendees?: number
+  }>
+  createdAt?: string
+  eventsAttended?: number
+}
+
 export default function AttendeeDashboard() {
-  const { user, loading } = useAuth()
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const userData = localStorage.getItem('user')
+    if (userData) {
+      setUser(JSON.parse(userData))
+    }
+    setLoading(false)
+  }, [])
 
   if (loading) {
     return (
@@ -60,7 +98,6 @@ export default function AttendeeDashboard() {
             <CardTitle>Upcoming Events</CardTitle>
           </CardHeader>
           <CardContent>
-            {/* Add upcoming events list here */}
             <div className="space-y-4">
               {user?.upcomingEvents?.length > 0 ? (
                 user.upcomingEvents.map((event, index) => (

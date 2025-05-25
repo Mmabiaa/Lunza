@@ -5,10 +5,10 @@ export async function POST(request: Request) {
     const { email, password, name, userType = 'attendee' } = await request.json()
 
     // Generate a sample user object
-    const sampleUser = {
+    const user = {
       id: Math.random().toString(36).substr(2, 9),
-      name: name || 'Test User',
-      email: email || 'test@example.com',
+      name: name || email.split('@')[0],
+      email,
       userType: userType as 'attendee' | 'organizer',
       totalEvents: userType === 'organizer' ? 5 : 0,
       eventsChange: 2,
@@ -33,15 +33,8 @@ export async function POST(request: Request) {
       events: userType === 'organizer' ? [
         {
           id: '1',
-          title: 'Tech Conference 2024',
-          date: '2024-06-10',
-          thumbnail: '/placeholder.svg',
-          attendees: 150
-        },
-        {
-          id: '2',
-          title: 'Web Development Workshop',
-          date: '2024-07-15',
+          title: 'Sample Event',
+          date: '2024-05-25',
           thumbnail: '/placeholder.svg',
           attendees: 100
         }
@@ -50,11 +43,27 @@ export async function POST(request: Request) {
       eventsAttended: userType === 'attendee' ? 3 : 0
     }
 
-    // Store in localStorage for testing
-    localStorage.setItem('user', JSON.stringify(sampleUser))
-    localStorage.setItem('token', 'test-token')
-
-    return NextResponse.json({ user: sampleUser })
+    return NextResponse.json({ 
+      user: {
+        id: '1',
+        email: email,
+        name: name,
+        type: userType,
+        eventsCreated: userType === 'organizer' ? [
+          {
+            id: '1',
+            title: 'Sample Event',
+            description: 'This is a sample event',
+            date: '2024-05-25',
+            thumbnail: '/placeholder.svg',
+            attendees: 100
+          }
+        ] : [],
+        createdAt: new Date().toISOString(),
+        eventsAttended: userType === 'attendee' ? 3 : 0
+      },
+      token: 'test-token'
+    })
   } catch (error) {
     console.error('Registration error:', error)
     return NextResponse.json(

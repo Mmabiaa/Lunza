@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { VideoBackground } from "@/app/components/video-background"
-import { useAuth } from "../(auth)/auth-context"
 
 export default function RegisterPage() {
   const [firstName, setFirstName] = useState('')
@@ -18,40 +17,56 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [accountType, setAccountType] = useState('attendee')
   const [error, setError] = useState('')
-  const { register } = useAuth()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (password !== confirmPassword) {
       setError('Passwords do not match')
       return
     }
 
-    try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+    // Create user data based on form inputs
+    const userData = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: `${firstName} ${lastName}`,
+      email,
+      userType: accountType,
+      totalEvents: accountType === 'organizer' ? 5 : 0,
+      eventsChange: 2,
+      totalAttendees: accountType === 'organizer' ? 150 : 0,
+      attendeesChange: 15,
+      watchTime: accountType === 'organizer' ? 1248 : 0,
+      watchTimeChange: 10,
+      revenue: accountType === 'organizer' ? 24780 : 0,
+      revenueChange: 12,
+      upcomingEvents: accountType === 'organizer' ? [
+        {
+          id: '1',
+          title: 'Tech Conference 2024',
+          date: '2024-06-10'
         },
-        body: JSON.stringify({
-          email,
-          password,
-          name: firstName + ' ' + lastName,
-          userType: accountType
-        })
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Registration failed')
-      }
-
-      const data = await response.json()
-      // Redirect to appropriate dashboard based on user type
-      router.push(accountType === 'attendee' ? '/dashboard/attendee' : '/dashboard/organizer')
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed. Please try again.')
+        {
+          id: '2',
+          title: 'Web Development Workshop',
+          date: '2024-07-15'
+        }
+      ] : [],
+      events: accountType === 'organizer' ? [
+        {
+          id: '1',
+          title: 'Sample Event',
+          date: '2024-05-25',
+          thumbnail: '/placeholder.svg',
+          attendees: 100
+        }
+      ] : [],
+      createdAt: new Date().toISOString(),
+      eventsAttended: accountType === 'attendee' ? 3 : 0
     }
+
+    localStorage.setItem('user', JSON.stringify(userData))
+    // Redirect based on account type
+    window.location.href = accountType === 'attendee' ? '/dashboard/attendee' : '/dashboard/organizer'
   }
 
   return (
