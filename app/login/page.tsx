@@ -47,7 +47,7 @@ export default function LoginPage() {
         muted
         className="absolute top-0 left-0 w-full h-full object-cover z-0"
       >
-        <source src="/blog.mp4" type="video/mp4" />
+        <source src="/videos/join-bg-video.mp4" type="video/mp4" />
       </video>
 
       {/* Overlay */}

@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CalendarIcon, BarChart3, Users, Clock, TicketIcon } from "lucide-react"
 import Link from "next/link"
 import { Navbar } from "@/app/components/navbar"
+import { LiveStream } from "@/components/live-stream"
 import { useRouter } from "next/navigation"
 
 interface User {
@@ -94,6 +95,15 @@ export default function DashboardPage() {
               <Button asChild>
                 <Link href="/dashboard/create">Create Event</Link>
               </Button>
+            </div>
+
+            {/* Live Stream Section */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-white mb-4">Live Stream</h2>
+              <LiveStream 
+                streamUrl="/live/stream" 
+                isOrganizer={user.userType === 'organizer'} 
+              />
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

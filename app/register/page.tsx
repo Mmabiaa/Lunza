@@ -51,11 +51,11 @@ export default function RegisterPage() {
         muted
         className="absolute top-0 left-0 w-full h-full object-cover z-0"
       >
-        <source src="/blog.mp4" type="video/mp4" />
+        <source src="/videos/join-bg-video.mp4" type="video/mp4" />
       </video>
 
       {/* Overlay */}
-      <div className="absolute top-0 left-0 w-full h-full bg-black/60 z-10"></div>
+      <div className="absolute top-0 left-0 w-full h-full bg-black/80 z-10"></div>
 
       {/* Content */}
       <div className="relative z-20 flex items-center justify-center min-h-screen p-4">

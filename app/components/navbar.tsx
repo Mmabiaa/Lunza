@@ -10,6 +10,7 @@ interface NavbarProps {
     name: string
     email: string
     userType: 'attendee' | 'organizer'
+    image?: string
   } | null
 }
 
@@ -33,8 +34,18 @@ export function Navbar({ user }: NavbarProps) {
             {user ? (
               <>
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                    <User className="w-6 h-6 text-white" />
+                  <div className="w-10 h-10 rounded-full overflow-hidden">
+                    {user?.image ? (
+                      <img 
+                        src={user.image} 
+                        alt={user.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-white/10 flex items-center justify-center">
+                        <User className="w-6 h-6 text-white" />
+                      </div>
+                    )}
                   </div>
                   <div className="text-white">
                     <p className="font-medium">{user.name}</p>
