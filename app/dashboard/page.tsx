@@ -9,49 +9,23 @@ import Link from "next/link"
 import { Navbar } from "@/app/components/navbar"
 import { LiveStream } from "@/components/live-stream"
 import { useRouter } from "next/navigation"
-
-interface User {
-  id: string
-  name: string
-  email: string
-  userType: 'attendee' | 'organizer'
-  totalEvents?: number
-  eventsChange?: number
-  totalAttendees?: number
-  attendeesChange?: number
-  watchTime?: number
-  watchTimeChange?: number
-  revenue?: number
-  revenueChange?: number
-  events?: Array<{
-    id: string
-    title: string
-    date: string
-    thumbnail?: string
-    attendees?: number
-  }>
-  createdAt?: string
-}
+import { useAuth } from "@/app/(auth)/auth-context"
+import type { User } from "@/app/(auth)/auth-context"
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { user, loading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    const userData = localStorage.getItem('user')
-    if (userData) {
-      const parsedUser = JSON.parse(userData)
-      setUser(parsedUser)
+    if (!loading && user) {
       // Redirect based on user type
-      if (parsedUser.userType === 'attendee') {
+      if (user.userType === 'attendee') {
         router.push('/dashboard/attendee')
-      } else if (parsedUser.userType === 'organizer') {
+      } else if (user.userType === 'organizer') {
         router.push('/dashboard/organizer')
       }
     }
-    setLoading(false)
-  }, [])
+  }, [user, loading, router])
 
   if (loading) {
     return (

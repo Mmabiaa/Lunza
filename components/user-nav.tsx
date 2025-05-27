@@ -13,12 +13,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ModeToggle } from "@/components/mode-toggle"
 import Link from "next/link"
+import { useAuth } from "@/app/(auth)/auth-context"
 
 export function UserNav() {
-  // This is a placeholder for authentication state
-  const isAuthenticated = false
+  const { user, logout } = useAuth()
 
-  if (!isAuthenticated) {
+  if (!user) {
     return (
       <div className="flex items-center gap-4">
         <div className="hidden md:flex md:gap-2">
@@ -36,42 +36,35 @@ export function UserNav() {
 
   return (
     <div className="flex items-center gap-4">
-      <Button asChild variant="outline" size="sm" className="hidden md:flex">
-        <Link href="/dashboard/create">Create Event</Link>
-      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
-              <AvatarImage src="/placeholder.svg" alt="User" />
-              <AvatarFallback>JD</AvatarFallback>
+              <AvatarImage src={user.image} alt={user.name} />
+              <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">John Doe</p>
-              <p className="text-xs leading-none text-muted-foreground">john.doe@example.com</p>
+              <p className="text-sm font-medium leading-none">{user.name}</p>
+              <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
-              <Link href="/dashboard">Dashboard</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/dashboard/events">My Events</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/dashboard/tickets">My Tickets</Link>
+              <Link href="/dashboard/profile">Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/dashboard/settings">Settings</Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Log out</DropdownMenuItem>
+          <DropdownMenuItem onClick={logout}>
+            Log out
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <ModeToggle />

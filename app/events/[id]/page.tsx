@@ -11,50 +11,126 @@ import { EventQA } from "@/components/event-qa"
 import { EventSchedule } from "@/components/event-schedule"
 import { EventSpeakers } from "@/components/event-speakers"
 
-export default function EventPage({ params }: { params: { id: string } }) {
-  const eventId = params.id;
+interface Event {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  timezone: string;
+  location: string;
+  attendees: number;
+  image: string;
+  status: string;
+  featured: boolean;
+  organizer: {
+    name: string;
+    logo: string;
+  };
+  price: string;
+  isLive: boolean;
+}
 
-  const events = [
+export default function EventPage({ params }: { params: { id: string } }) {
+  const eventId = parseInt(params.id);
+  const router = useRouter();
+  const [events, setEvents] = useState([
     {
       id: 1,
-      title: "Tech Conference 2024",
-      description:
-        "Join industry leaders for the biggest tech conference of the year. Explore the latest trends, technologies, and innovations shaping the future of the tech industry.",
-      date: "June 15-17, 2024",
-      time: "9:00 AM - 5:00 PM",
-      timezone: "Pacific Time (UTC-8)",
-      location: "Virtual",
-      attendees: 1500,
-      image: "/placeholder.svg?height=720&width=1280",
-      status: "upcoming",
-      featured: true,
-      organizer: {
-        name: "TechEvents Inc.",
-        logo: "/placeholder.svg?height=100&width=100",
-      },
-      price: "$29.99",
+      title: "AI and Machine Learning Workshop",
+      description: "Learn the latest in AI and machine learning technologies",
+      date: "2025-05-27",
+      status: "live",
+      image: "/images/AI and machine learning workshop.jpg",
+      video: "/videos/AI and machine learning workshop.mp4",
       isLive: true,
     },
     {
       id: 2,
-      title: "Future of Work Summit",
-      description:
-        "Explore the evolving workplace with insights from global experts. Discover how remote work, automation, and AI are reshaping the future of employment.",
-      date: "July 10-11, 2024",
-      time: "10:00 AM - 4:00 PM",
-      timezone: "Eastern Time (UTC-5)",
-      location: "Virtual",
-      attendees: 1200,
-      image: "/placeholder.svg?height=720&width=1280",
+      title: "Cybersecurity Conference",
+      description: "Protect your digital assets with expert insights",
+      date: "2025-05-28",
       status: "upcoming",
-      featured: true,
-      organizer: {
-        name: "WorkWorld Summit",
-        logo: "/placeholder.svg?height=100&width=100",
-      },
-      price: "$24.99",
-      isLive: true,
+      image: "/images/Cybersecurity Conference.jpg",
+      video: "/videos/Cybersecurity Conference.mp4",
+      isLive: false,
     },
+    {
+      id: 3,
+      title: "DevOps Transformation",
+      description: "Modernize your development processes",
+      date: "2025-05-29",
+      status: "upcoming",
+      image: "/images/DevOps Transformation Conference.jpg",
+      video: "/videos/DevOps Transformation Conference.mp4",
+      isLive: false,
+    }
+  ]);
+
+  const event = events.find(e => e.id === eventId);
+
+  if (!event) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold mb-2">Event Not Found</h2>
+          <p className="text-muted-foreground">The event you're looking for doesn't exist or has been removed.</p>
+          <Button onClick={() => router.push('/events/create')} className="mt-4">
+            Create New Event
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto py-8">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">{event.title}</h1>
+        <Button onClick={() => router.push('/events/create')}>
+          Create New Event
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+            <div className="flex items-center gap-2">
+              <Badge variant={event.status === "live" ? "destructive" : "outline"} className="px-3 py-1">
+                {event.status === "live" ? "LIVE NOW" : "Upcoming"}
+              </Badge>
+              <span className="text-sm text-muted-foreground">Event #{eventId}</span>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-6">
+            <div className="space-y-4">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-4">
+                  <CalendarIcon className="h-4 w-4" />
+                  <span>{event.date}</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <TicketIcon className="h-4 w-4" />
+                  <span>Free Event</span>
+                </div>
+              </div>
+              <p className="text-muted-foreground">{event.description}</p>
+              <div className="flex justify-end">
+                <Button 
+                  variant="outline" 
+                  onClick={() => router.push(`/events/${eventId}/edit`)}
+                >
+                  Edit Event
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
     {
       id: 3,
       title: "AI & Machine Learning Workshop",
