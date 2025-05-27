@@ -1,56 +1,66 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/app/(auth)/auth-context"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { User, Calendar, Ticket, Settings, LogOut } from "lucide-react"
-import { Navbar } from "@/app/components/navbar"
+import { CalendarIcon, Clock, MapPin, Users, TicketIcon, Search, Filter } from "lucide-react"
+import Link from "next/link"
 
-interface User {
-  id: string
-  name: string
-  email: string
-  userType: 'attendee' | 'organizer'
-  totalEvents?: number
-  eventsChange?: number
-  totalAttendees?: number
-  attendeesChange?: number
-  watchTime?: number
-  watchTimeChange?: number
-  revenue?: number
-  revenueChange?: number
-  upcomingEvents?: Array<{
-    id: string
-    title: string
-    date: string
-  }>
-  events?: Array<{
-    id: string
-    title: string
-    date: string
-    thumbnail?: string
-    attendees?: number
-  }>
-  createdAt?: string
-  eventsAttended?: number
-}
-
-export default function AttendeeDashboard() {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+export default function AttendeeDashboardPage() {
+  const { user, loading } = useAuth()
+  const router = useRouter()
+  const [mockUser, setMockUser] = useState<any>(null)
 
   useEffect(() => {
-    const userData = localStorage.getItem('user')
-    if (userData) {
-      const parsedUser = JSON.parse(userData)
-      if (parsedUser.userType === 'attendee') {
-        setUser(parsedUser)
+    if (!loading && user) {
+      if (user.userType !== 'attendee') {
+        router.push('/dashboard/organizer')
       } else {
-        window.location.href = '/dashboard/organizer'
+        // Add mock data for testing
+        setMockUser({
+          ...user,
+          upcomingEvents: 2,
+          pastEvents: 5,
+          totalTickets: 7,
+          watchTime: 24,
+          upcomingEventsList: [
+            {
+              id: '1',
+              title: 'Tech Conference 2024',
+              date: '2024-06-15',
+              location: 'San Francisco, CA',
+              thumbnail: '/placeholder.svg'
+            },
+            {
+              id: '2',
+              title: 'Music Festival',
+              date: '2024-07-20',
+              location: 'Los Angeles, CA',
+              thumbnail: '/placeholder.svg'
+            }
+          ],
+          pastEventsList: [
+            {
+              id: '3',
+              title: 'Web Development Workshop',
+              date: '2024-01-15',
+              location: 'New York, NY',
+              thumbnail: '/placeholder.svg'
+            },
+            {
+              id: '4',
+              title: 'Design Conference',
+              date: '2024-02-20',
+              location: 'Chicago, IL',
+              thumbnail: '/placeholder.svg'
+            }
+          ]
+        })
       }
     }
-    setLoading(false)
-  }, [])
+  }, [user, loading, router])
 
   if (loading) {
     return (
@@ -61,124 +71,183 @@ export default function AttendeeDashboard() {
   }
 
   if (!user) {
-    return <div className="flex items-center justify-center h-screen bg-black/50 text-white">Please login to access your dashboard</div>
+    return <div className="flex items-center justify-center h-screen bg-black/50 text-white">Please login to view dashboard</div>
   }
 
   return (
-    <div className="relative min-h-screen bg-black">
+    <div className="relative min-h-screen">
       {/* Video Background */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover z-0"
-      >
-        <source src="/videos/blog.mp4" type="video/mp4" />
-      </video>
+      <div className="fixed inset-0 w-full h-full overflow-hidden -z-10">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute min-w-full min-h-full object-cover"
+        >
+          <source src="/videos/management-bg-video.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/70" />
+      </div>
 
-      {/* Overlay */}
-      <div className="absolute top-0 left-0 w-full h-full bg-black/80 z-10"></div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-white">Welcome, {user.name}</h1>
+          <Button asChild>
+            <Link href="/dashboard/attendee/events">
+              <Search className="w-4 h-4 mr-2" />
+              Browse Events
+            </Link>
+          </Button>
+        </div>
 
-      {/* Content */}
-      <div className="relative z-20">
-        <Navbar user={user} />
-
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Quick Actions */}
+        <div className="grid gap-8">
+          {/* Quick Stats */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card className="bg-white/10 backdrop-blur-md border-white/20 text-white">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
-                  Quick Actions
-                </CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Upcoming Events</CardTitle>
+                <CalendarIcon className="h-4 w-4 text-white/70" />
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <Link 
-                    href="/events"
-                    className="block p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                  >
-                    <h3 className="text-lg font-semibold">Browse Events</h3>
-                    <p className="text-white/70">Find events to attend</p>
-                  </Link>
-                  <Link 
-                    href="/tickets"
-                    className="block p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                  >
-                    <h3 className="text-lg font-semibold">My Tickets</h3>
-                    <p className="text-white/70">View your event tickets</p>
-                  </Link>
-                  <Link 
-                    href="/profile"
-                    className="block p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                  >
-                    <h3 className="text-lg font-semibold">Edit Profile</h3>
-                    <p className="text-white/70">Update your information</p>
-                  </Link>
-                </div>
+                <div className="text-2xl font-bold">{mockUser?.upcomingEvents || 0}</div>
+                <p className="text-xs text-white/70">Events you're registered for</p>
               </CardContent>
             </Card>
-
-            {/* Event Stats */}
             <Card className="bg-white/10 backdrop-blur-md border-white/20 text-white">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Ticket className="w-5 h-5" />
-                  Event Stats
-                </CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Past Events</CardTitle>
+                <Clock className="h-4 w-4 text-white/70" />
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 rounded-lg bg-white/5">
-                      <p className="text-white/70">Events Attended</p>
-                      <h3 className="text-2xl font-bold">{user.eventsAttended || 0}</h3>
-                    </div>
-                    <div className="p-4 rounded-lg bg-white/5">
-                      <p className="text-white/70">Upcoming Events</p>
-                      <h3 className="text-2xl font-bold text-blue-400">{user.upcomingEvents?.length ?? 0}</h3>
-                    </div>
-                    <div className="p-4 rounded-lg bg-white/5">
-                      <p className="text-white/70">Watch Time</p>
-                      <h3 className="text-2xl font-bold text-green-400">{user.watchTime || 0}h</h3>
-                    </div>
-                    <div className="p-4 rounded-lg bg-white/5">
-                      <p className="text-white/70">Total Spent</p>
-                      <h3 className="text-2xl font-bold text-purple-400">${user.revenue?.toLocaleString() || 0}</h3>
-                    </div>
-                  </div>
-                </div>
+                <div className="text-2xl font-bold">{mockUser?.pastEvents || 0}</div>
+                <p className="text-xs text-white/70">Events you've attended</p>
               </CardContent>
             </Card>
-
-            {/* Profile and Settings */}
             <Card className="bg-white/10 backdrop-blur-md border-white/20 text-white">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="w-5 h-5" />
-                  Profile & Settings
-                </CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Tickets</CardTitle>
+                <TicketIcon className="h-4 w-4 text-white/70" />
               </CardHeader>
               <CardContent>
-                <div className="space-y-6">
-                  <div className="p-4 rounded-lg bg-white/5">
-                    <h3 className="text-lg font-semibold mb-2">Attendee Information</h3>
-                    <p className="text-white/70">Name: {user.name}</p>
-                    <p className="text-white/70">Email: {user.email}</p>
-                    <p className="text-white/70">Member since: {new Date(user.createdAt || '').toLocaleDateString()}</p>
-                  </div>
-                  <div className="p-4 rounded-lg bg-white/5">
-                    <h3 className="text-lg font-semibold mb-2">Activity Summary</h3>
-                    <p className="text-white/70">Events Attended: {user.eventsAttended || 0}</p>
-                    <p className="text-white/70">Watch Time: {user.watchTime || 0} hours</p>
-                    <p className="text-white/70">Total Spent: ${user.revenue?.toLocaleString() || 0}</p>
-                  </div>
-                </div>
+                <div className="text-2xl font-bold">{mockUser?.totalTickets || 0}</div>
+                <p className="text-xs text-white/70">Tickets purchased</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-white/10 backdrop-blur-md border-white/20 text-white">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Watch Time</CardTitle>
+                <Clock className="h-4 w-4 text-white/70" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{mockUser?.watchTime || 0} hrs</div>
+                <p className="text-xs text-white/70">Total time spent in events</p>
               </CardContent>
             </Card>
           </div>
+
+          {/* Upcoming Events */}
+          <Card className="bg-white/10 backdrop-blur-md border-white/20 text-white">
+            <CardHeader>
+              <CardTitle>Upcoming Events</CardTitle>
+              <CardDescription>Events you're registered for</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {mockUser?.upcomingEventsList?.length ? (
+                  mockUser.upcomingEventsList.map((event: any) => (
+                    <Card key={event.id} className="bg-white/5 border-white/10">
+                      <div className="aspect-video w-full overflow-hidden">
+                        <img
+                          src={event.thumbnail || '/placeholder.svg'}
+                          alt={event.title}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <CardHeader className="p-4">
+                        <CardTitle className="line-clamp-1 text-xl">{event.title}</CardTitle>
+                        <CardDescription className="flex items-center gap-2 text-white/70">
+                          <CalendarIcon className="h-4 w-4" />
+                          <span>{new Date(event.date).toLocaleDateString()}</span>
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-4 pt-0">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1 text-sm text-white/70">
+                            <MapPin className="h-4 w-4" />
+                            <span>{event.location}</span>
+                          </div>
+                          <Button asChild size="sm" variant="outline" className="text-white border-white/20 hover:bg-white/10">
+                            <Link href={`/dashboard/attendee/events/${event.id}`}>
+                              View Details
+                            </Link>
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-8">
+                    <h3 className="text-lg font-semibold mb-2 text-white">No upcoming events</h3>
+                    <p className="text-white/70">Browse events to find something interesting</p>
+                    <Button asChild className="mt-4">
+                      <Link href="/dashboard/attendee/events">Browse Events</Link>
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Past Events */}
+          <Card className="bg-white/10 backdrop-blur-md border-white/20 text-white">
+            <CardHeader>
+              <CardTitle>Past Events</CardTitle>
+              <CardDescription>Events you've attended</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {mockUser?.pastEventsList?.length ? (
+                  mockUser.pastEventsList.map((event: any) => (
+                    <Card key={event.id} className="bg-white/5 border-white/10">
+                      <div className="aspect-video w-full overflow-hidden">
+                        <img
+                          src={event.thumbnail || '/placeholder.svg'}
+                          alt={event.title}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <CardHeader className="p-4">
+                        <CardTitle className="line-clamp-1 text-xl">{event.title}</CardTitle>
+                        <CardDescription className="flex items-center gap-2 text-white/70">
+                          <CalendarIcon className="h-4 w-4" />
+                          <span>{new Date(event.date).toLocaleDateString()}</span>
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-4 pt-0">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1 text-sm text-white/70">
+                            <MapPin className="h-4 w-4" />
+                            <span>{event.location}</span>
+                          </div>
+                          <Button asChild size="sm" variant="outline" className="text-white border-white/20 hover:bg-white/10">
+                            <Link href={`/dashboard/attendee/events/${event.id}`}>
+                              View Details
+                            </Link>
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-8">
+                    <h3 className="text-lg font-semibold mb-2 text-white">No past events</h3>
+                    <p className="text-white/70">Your event history will appear here</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

@@ -18,10 +18,22 @@ export interface User {
   watchTimeChange?: number
   revenue?: number
   revenueChange?: number
-  upcomingEvents?: Array<{
+  upcomingEvents?: number
+  pastEvents?: number
+  totalTickets?: number
+  upcomingEventsList?: Array<{
     id: string
     title: string
     date: string
+    location: string
+    thumbnail: string
+  }>
+  pastEventsList?: Array<{
+    id: string
+    title: string
+    date: string
+    location: string
+    thumbnail: string
   }>
   events?: Array<{
     id: string
@@ -33,6 +45,7 @@ export interface User {
   createdAt: string
   eventsAttended?: number
   image?: string
+  registeredEvents?: string[]
 }
 
 interface AuthContextType {
